@@ -1,37 +1,15 @@
-val dottyVersion = "3.0.0"
-val libVersion = "0.1.0"
+val dottyVersion = "3.1.2"
 val org = "org.mycompany"
 
 lazy val plugin = project
   .settings(
-    name := "scala-counter-plugin",
+    name := "scala-plugin-test",
     organization := org,
-    version := libVersion,
-
+    version := "0.1.0-SNAPSHOT",
     scalaVersion := dottyVersion,
 
     libraryDependencies += "org.scala-lang" %% "scala3-compiler" % dottyVersion % "provided"
   )
-
-lazy val runtime = project
-  .settings(
-    name := "scala-counter-runtime",
-    organization := "org.mycompany",
-    version := libVersion,
-
-    scalaVersion := dottyVersion
-  )
-
-lazy val counter = project
-  .aggregate(plugin, runtime)
-  .settings(
-    name := "scala-counter",
-    organization := org,
-    version := libVersion,
-
-    scalaVersion := dottyVersion,
-  )
-
 
 lazy val hello = project
   .settings(
@@ -39,12 +17,12 @@ lazy val hello = project
     version := "0.1.0",
     scalaVersion := dottyVersion,
 
-    scalacOptions += "-P:counter:hello/counter.yml",
-
-    libraryDependencies += "org.mycompany" %% "scala-counter-runtime" % "0.1.0",
-    libraryDependencies += compilerPlugin("org.mycompany" %% "scala-counter-plugin" % "0.1.0")
+    libraryDependencies += compilerPlugin("org.mycompany" %% "scala-plugin-test" % "0.1.0-SNAPSHOT"),
   )
 
 
 lazy val root = project
-  .aggregate(plugin, runtime)
+  .aggregate(plugin, hello)
+
+
+  addCommandAlias("rebuildWithRebuiltPlugin", ";root/clean;plugin/compile;plugin/publishLocal;compile")

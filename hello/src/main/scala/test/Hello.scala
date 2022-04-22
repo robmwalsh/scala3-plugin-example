@@ -1,3 +1,5 @@
+package test
+
 object Hello {
   def main(args: Array[String]): Unit = {
     foo(5)
